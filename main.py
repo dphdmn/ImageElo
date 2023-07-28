@@ -42,6 +42,7 @@ class ImageViewer(QMainWindow):
         try:
             tmpImage1 = Image.open(os.path.join(self.folder, self.file1))
             output_path = os.path.join(self.folder, "!!!game_tmp1.jpg")
+            tmpImage1 = tmpImage1.convert('RGB')
             tmpImage1.save(output_path, format="JPEG")
             self.file1TMP = output_path
         except Exception as e:
@@ -51,6 +52,7 @@ class ImageViewer(QMainWindow):
         try:
             tmpImage2 = Image.open(os.path.join(self.folder, self.file2))
             output_path = os.path.join(self.folder, "!!!game_tmp2.jpg")
+            tmpImage2 = tmpImage2.convert('RGB')
             tmpImage2.save(output_path, format="JPEG")
             self.file2TMP = output_path
         except Exception as e:
