@@ -21,6 +21,10 @@ ImageElo is an interactive Python script that helps you sort and organize your i
 
 4. **Sorting Fun**:
    - ImageElo presents image pairs for comparison. Choose which one you prefer or find more appealing.
+   - Use the Left Arrow key to choose the image on the left.
+   - Use the Right Arrow key to select the image on the right.
+   - Pan/zoom images using the scroll wheel and left mouse button.
+   - Press the Esc key to exit.
 
 5. **Flexible Management**:
    - Add or delete image files between sessions to keep your collection up to date.
