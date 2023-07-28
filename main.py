@@ -272,7 +272,7 @@ def doGame(folder, elo_dict, eloFile):
         if corrupted is not None:
             elo_dict = update_elo_and_move_file(folder, corrupted, elo_dict)
     if len(elo_dict) < 2:
-        print("Game was over because some many files are corrupted, and there are less than 2 good files left!")
+        print("Game was over because some files are corrupted, and there are less than 2 good files left!")
     elo_dict = rename_files_and_update_dict(folder, elo_dict)
     print("Game is over, please wait before data is saved.")
     save_dict_to_file(elo_dict, eloFile)
