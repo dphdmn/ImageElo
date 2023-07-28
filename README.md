@@ -35,7 +35,7 @@ Using ImageElo is straightforward. Follow these steps:
    - The file names of the images are purely for visual sorting purposes and have no impact on Elo values.
    - Renaming a file will not affect its Elo value; instead, it will be treated as an unknown image with an initial Elo of 1000 on the next run.
 
-7. **Adding More Images**:
+7. **Merging different elo folders**:
    - Merging is not natively supported for now, so it's best to locate all images in one folder before using the script.
    - If you wish to include additional images from another session or a different folder, and keep their elo values, manually modify the values in "gameElo.txt" to merge them.
    - Otherwise, new files will be considered fresh with an initial Elo of 1000. 
