@@ -1,10 +1,10 @@
 # ImageElo: Interactive Image Sorting with Elo Rating
 
-ImageElo is a powerful Python script designed to assist you in organizing your image folder interactively through the Elo rating system. With ImageElo, you can easily compare and sort your images by comparing them in pairs.
+ImageElo is a powerful Python script designed to help you organize your image folder interactively using the Elo rating system. With ImageElo, you can easily compare and sort your images by comparing them in pairs.
 
 ## ⚠️ Caution: Backup Your Files Before Running ⚠️
 
-**Important:** Prior to executing this script on your actual image files, it is crucial to create a backup of your entire image folder. The script has the capability to rename files, which could potentially lead to data loss or other unintended issues.
+**Important:** Before running this script on your actual image files, it is crucial to create a backup of your entire image folder. The script has the capability to rename files, which could potentially lead to data loss or other unintended issues.
 
 ## How to Use
 
@@ -24,11 +24,11 @@ Using ImageElo is straightforward. Follow these steps:
 
 4. **Managing Image Files**:
    - You have the flexibility to add or delete image files between different sessions.
-   - New images get default 1000 elo values regardless of their name (elo is not parsed from the image file)
+   - New images are given a default Elo value of 1000, regardless of their names (Elo is not parsed from the image file).
 
 5. **Important Note**:
    - Avoid deleting the "gameElo.txt" file, as doing so will reset your progress.
-   - When the script is run again without "gameElo.txt," all files will be renamed and get default 1000 elo value.
+   - When the script is run again without "gameElo.txt," all files will be renamed, and they will get a default Elo value of 1000.
 
 6. **Understanding Game Progress**:
    - The game's progress is determined by Elo values assigned to each image, stored in the "gameElo.txt" dictionary.
@@ -37,7 +37,7 @@ Using ImageElo is straightforward. Follow these steps:
 
 7. **Merging different elo folders**:
    - Merging is not natively supported for now, so it's best to locate all images in one folder before using the script.
-   - If you wish to include additional images from another session or a different folder, and keep their elo values, manually modify the values in "gameElo.txt" to merge them.
+   - If you wish to include additional images from another session or a different folder while keeping their elo values, manually modify the values in "gameElo.txt" to merge them.
    - Otherwise, new files will be considered fresh with an initial Elo of 1000. 
 
 Before applying ImageElo to your actual image collection, we strongly advise testing it on a small set of dummy files to ensure everything works as expected.
