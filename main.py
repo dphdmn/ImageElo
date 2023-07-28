@@ -14,14 +14,14 @@ def handle_wheel_event(view, event):
     zoom_factor = view.transform().m11()
 
     # Calculate the new zoom factor based on the scroll direction
-    zoom_delta = 0.2
+    zoom_delta = 0.1
     if event.angleDelta().y() > 0:
         zoom_factor += zoom_delta
     else:
         zoom_factor -= zoom_delta
 
     # Limit the zoom factor within certain bounds to avoid excessive scaling
-    zoom_factor = max(0.5, min(4.0, zoom_factor))
+    zoom_factor = max(0.1, min(4.0, zoom_factor))
 
     # Set the new zoom factor
     view.setTransform(QTransform().scale(zoom_factor, zoom_factor))
