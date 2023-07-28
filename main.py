@@ -5,8 +5,8 @@ import sys
 from PIL import Image
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsView, QGraphicsScene, QGraphicsPixmapItem, QWidget, \
     QHBoxLayout
-from PyQt5.QtGui import QPixmap, QTransform
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap, QTransform, QKeyEvent
+from PyQt5.QtCore import Qt, QEvent, QCoreApplication
 
 
 def handle_wheel_event(view, event):
@@ -44,17 +44,26 @@ class ImageViewer(QMainWindow):
             self.file1TMP = output_path
         except Exception as e:
             print(f"Skipping non-image file: {self.file1}")
+            self.chosen_file = "Error"
         try:
             tmpImage2 = Image.open(os.path.join(self.folder, self.file2))
             output_path = os.path.join(self.folder, "!!!game_tmp2.jpg")
             tmpImage2.save(output_path, format="JPEG")
             self.file2TMP = output_path
         except Exception as e:
+            self.chosen_file = "Error"
             print(f"Skipping non-image file: {self.file2}")
-
         self.initUI()
 
+    def simulate_escape_key_press(self):
+        # Create a key press event for the Escape key
+        event = QKeyEvent(QEvent.KeyPress, Qt.Key_Escape, Qt.NoModifier)
+
+        # Send the event to the application's event loop
+        QCoreApplication.postEvent(self, event)
+
     def initUI(self):
+
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
@@ -131,6 +140,8 @@ class ImageViewer(QMainWindow):
         self.view2.wheelEvent = lambda event: handle_wheel_event(self.view2, event)
 
         self.showFullScreen()
+        if self.chosen_file == "Error":
+            self.simulate_escape_key_press()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Left:
@@ -173,6 +184,9 @@ def simulate_battle(elo_dict, folder):
         loser = filename2
     elif winner == filename2:
         loser = filename1
+    elif winner == "Error":
+        print("Battle was skipped because of error in one of the files.")
+        return True, elo_dict #if error, just skipping this battle
     else:
         return False, elo_dict  # no winner
 
@@ -229,8 +243,11 @@ def doGame(folder, elo_dict, eloFile):
         winner, elo_dict = simulate_battle(elo_dict, folder)
     elo_dict = rename_files_and_update_dict(folder, elo_dict)
     save_dict_to_file(elo_dict, eloFile)
-    os.remove(os.path.join(folder, "!!!game_tmp1.jpg"))
-    os.remove(os.path.join(folder, "!!!game_tmp2.jpg"))
+    try:
+        os.remove(os.path.join(folder, "!!!game_tmp1.jpg"))
+        os.remove(os.path.join(folder, "!!!game_tmp2.jpg"))
+    except Exception as e:
+        print("Could not delete tmp files.")
 
 
 def loadGame(folder):
