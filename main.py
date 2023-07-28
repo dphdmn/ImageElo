@@ -166,12 +166,12 @@ def display_and_choose_files(folder, file1, file2):
 
 
 def save_dict_to_file(dictionary, filename):
-    with open(filename, 'w') as file:
+    with open(filename, 'w',  encoding='utf-8') as file:
         json.dump(dictionary, file)
 
 
 def load_dict_from_file(filename):
-    with open(filename, 'r') as file:
+    with open(filename, 'r',  encoding='utf-8') as file:
         return json.load(file)
 
 
@@ -297,7 +297,7 @@ def loadGame(folder):
 def startGame(folder, gamefile):
     filenames = []
     eloFile = os.path.join(folder, "gameElo.txt")
-    with open(gamefile, 'r') as file:
+    with open(gamefile, 'r', encoding='utf-8') as file:
         for line in file:
             filenames.append(line.strip())
     os.remove(gamefile)
@@ -328,7 +328,15 @@ def writeInFile(filepath, folder_name):
     if image_files:
         with open(filepath, 'w', encoding='utf-8') as file:
             for image_path in image_files:
-                file.write(f"{os.path.basename(image_path)}\n")
+                image_name = os.path.basename(image_path)
+                try:
+                    # Try to encode the filename using 'utf-8' and ignore any errors
+                    encoded_name = image_name.encode('utf-8', errors='ignore').decode('utf-8')
+                except UnicodeEncodeError:
+                    # If the filename cannot be encoded using 'utf-8', replace problematic characters
+                    encoded_name = ''.join(c if ord(c) < 128 else '_' for c in image_name)
+                file.write(f"{encoded_name}\n")
+
         print(f"Image paths written to '{filepath}' successfully.")
     else:
         print("No image files found in the specified folder.")
