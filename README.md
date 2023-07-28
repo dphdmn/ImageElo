@@ -6,11 +6,6 @@ ImageElo is a Python script that allows you to create an interactive game of Elo
 
 **Important:** Before running this script on real image files, it is strongly recommended to create a backup of your image folder. The script has the potential to rename files and could inadvertently cause data loss or other issues.
 
-## Known Issues
-
-- Some image files may not work correctly with the script, including simple png files. As a temporary workaround, the script currently converts these problematic images to jpg format, which can significantly slow down the sorting process.
-- The issues appear to be related to the PIL (Python Imaging Library) and/or QGraphicsView used by the script. Errors may occur when attempting to open certain images, even after conversion.
-
 ## How to Use
 
 To use ImageElo, follow these steps:
