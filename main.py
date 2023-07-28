@@ -2,7 +2,7 @@ import random
 import json
 import os
 import sys
-
+from PIL import Image
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsView, QGraphicsScene, QGraphicsPixmapItem, QWidget, \
     QHBoxLayout
 from PyQt5.QtGui import QPixmap, QTransform
@@ -35,6 +35,22 @@ class ImageViewer(QMainWindow):
         self.file1 = file1
         self.file2 = file2
         self.chosen_file = None
+        self.file1TMP = self.file1
+        self.file2TMP = self.file2
+        try:
+            tmpImage1 = Image.open(os.path.join(self.folder, self.file1))
+            output_path = os.path.join(self.folder, "!!!game_tmp1.jpg")
+            tmpImage1.save(output_path, format="JPEG")
+            self.file1TMP = output_path
+        except Exception as e:
+            print(f"Skipping non-image file: {self.file1}")
+        try:
+            tmpImage2 = Image.open(os.path.join(self.folder, self.file2))
+            output_path = os.path.join(self.folder, "!!!game_tmp2.jpg")
+            tmpImage2.save(output_path, format="JPEG")
+            self.file2TMP = output_path
+        except Exception as e:
+            print(f"Skipping non-image file: {self.file2}")
 
         self.initUI()
 
@@ -53,8 +69,8 @@ class ImageViewer(QMainWindow):
         layout.addWidget(self.view2)
 
         # Load images
-        image1 = QPixmap(os.path.join(self.folder, self.file1))
-        image2 = QPixmap(os.path.join(self.folder, self.file2))
+        image1 = QPixmap(self.file1TMP)
+        image2 = QPixmap(self.file2TMP)
 
         # Create graphics scenes for images
         self.scene1 = QGraphicsScene(self)
@@ -232,6 +248,8 @@ def doGame(folder, elo_dict, eloFile):
         winner, elo_dict = simulate_battle(elo_dict, folder)
     elo_dict = rename_files_and_update_dict(folder, elo_dict)
     save_dict_to_file(elo_dict, eloFile)
+    os.remove(os.path.join(folder, "!!!game_tmp1.jpg"))
+    os.remove(os.path.join(folder, "!!!game_tmp2.jpg"))
 
 
 def loadGame(folder):
