@@ -27,7 +27,7 @@ Using ImageElo is straightforward. Follow these steps:
 
 5. **Important Note**:
    - Avoid deleting the "gameElo.txt" file, as doing so will reset your progress.
-   - When the script is run again without "gameElo.txt," all files will be renamed.
+   - When the script is run again without "gameElo.txt," all files will be renamed and get default 1000 elo value.
 
 6. **Understanding Game Progress**:
    - The game's progress is determined by Elo values assigned to each image, stored in the "gameElo.txt" dictionary.
