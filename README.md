@@ -24,6 +24,7 @@ Using ImageElo is straightforward. Follow these steps:
 
 4. **Managing Image Files**:
    - You have the flexibility to add or delete image files between different sessions.
+   - New images get default 1000 elo values regardless of their name (elo is not parsed from the image file)
 
 5. **Important Note**:
    - Avoid deleting the "gameElo.txt" file, as doing so will reset your progress.
