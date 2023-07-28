@@ -1,6 +1,7 @@
 import random
 import json
 import os
+import shutil
 import sys
 from PIL import Image
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsView, QGraphicsScene, QGraphicsPixmapItem, QWidget, \
@@ -35,6 +36,7 @@ class ImageViewer(QMainWindow):
         self.file1 = file1
         self.file2 = file2
         self.chosen_file = None
+        self.corrupted_file = None
         self.file1TMP = self.file1
         self.file2TMP = self.file2
         try:
@@ -43,7 +45,8 @@ class ImageViewer(QMainWindow):
             tmpImage1.save(output_path, format="JPEG")
             self.file1TMP = output_path
         except Exception as e:
-            print(f"Skipping non-image file: {self.file1}")
+            print(f"Skipping corrupted file: {self.file1}")
+            self.corrupted_file = self.file1
             self.chosen_file = "Error"
         try:
             tmpImage2 = Image.open(os.path.join(self.folder, self.file2))
@@ -51,8 +54,9 @@ class ImageViewer(QMainWindow):
             tmpImage2.save(output_path, format="JPEG")
             self.file2TMP = output_path
         except Exception as e:
+            print(f"Skipping corrupted file: {self.file2}")
+            self.corrupted_file = self.file2
             self.chosen_file = "Error"
-            print(f"Skipping non-image file: {self.file2}")
         self.initUI()
 
     def simulate_escape_key_press(self):
@@ -158,7 +162,7 @@ def display_and_choose_files(folder, file1, file2):
     app = QApplication(sys.argv)
     viewer = ImageViewer(folder, file1, file2)
     app.exec_()
-    return viewer.chosen_file
+    return viewer.chosen_file, viewer.corrupted_file
 
 
 def save_dict_to_file(dictionary, filename):
@@ -179,16 +183,16 @@ def simulate_battle(elo_dict, folder):
     index = random.randint(0, len(sorted_filenames) - 2)
     filename1, filename2 = sorted_filenames[index], sorted_filenames[index + 1]
 
-    winner = display_and_choose_files(folder, filename1, filename2)
+    winner, corrupted = display_and_choose_files(folder, filename1, filename2)
     if winner == filename1:
         loser = filename2
     elif winner == filename2:
         loser = filename1
     elif winner == "Error":
         print("Battle was skipped because of error in one of the files.")
-        return True, elo_dict #if error, just skipping this battle
+        return corrupted, True, elo_dict #if error, just skipping this battle
     else:
-        return False, elo_dict  # no winner
+        return None, False, elo_dict  # no winner
 
     # Update Elo ratings based on the result
     k = 32  # Elo update constant (you can adjust this as per your preference)
@@ -203,7 +207,7 @@ def simulate_battle(elo_dict, folder):
     elo_dict[winner] = updated_elo_winner
     elo_dict[loser] = updated_elo_loser
 
-    return True, elo_dict
+    return None, True, elo_dict
 
 
 def initialize_elo_system(filenames, initial_elo=1000):
@@ -236,12 +240,41 @@ def rename_files_and_update_dict(folderPath, file_dict):
 
     return updated_dict
 
+def update_elo_and_move_file(folder, corrupted, elo_dict):
+    # Step 1: Create the "corrupted files" subfolder if it doesn't exist
+    corrupted_files_subfolder = os.path.join(folder, "corrupted files")
+    if not os.path.exists(corrupted_files_subfolder):
+        os.makedirs(corrupted_files_subfolder)
+
+    # Step 2: Move the corrupted file to the "corrupted files" subfolder
+    new_corrupted_path = os.path.join(corrupted_files_subfolder, corrupted)
+    file_id = 1
+    while os.path.exists(new_corrupted_path):
+        # If a file with the same name already exists, add a unique identifier
+        filename, file_extension = os.path.splitext(corrupted)
+        new_corrupted = f"{filename}_{file_id}{file_extension}"
+        new_corrupted_path = os.path.join(corrupted_files_subfolder, new_corrupted)
+        file_id += 1
+
+    # Perform the file move
+    shutil.move(os.path.join(folder, corrupted), new_corrupted_path)
+
+    # Step 3: Remove the "corrupted" key from elo_dict and return the updated dictionary
+    if corrupted in elo_dict:
+        elo_dict.pop(corrupted)
+
+    return elo_dict
 
 def doGame(folder, elo_dict, eloFile):
     winner = True
-    while (winner):
-        winner, elo_dict = simulate_battle(elo_dict, folder)
+    while winner and len(elo_dict) > 1:
+        corrupted, winner, elo_dict = simulate_battle(elo_dict, folder)
+        if corrupted is not None:
+            elo_dict = update_elo_and_move_file(folder, corrupted, elo_dict)
+    if len(elo_dict) < 2:
+        print("Game was over because some many files are corrupted, and there are less than 2 good files left!")
     elo_dict = rename_files_and_update_dict(folder, elo_dict)
+    print("Game is over, please wait before data is saved.")
     save_dict_to_file(elo_dict, eloFile)
     try:
         os.remove(os.path.join(folder, "!!!game_tmp1.jpg"))
@@ -325,11 +358,10 @@ def is_image_file(filename):
 
 def find_image_files(folder_path):
     image_files = []
-    for root, _, files in os.walk(folder_path):
-        for file in files:
-            if is_image_file(file):
-                file_path = os.path.join(root, file)
-                image_files.append(file_path)
+    for file in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, file)
+        if is_image_file(file_path):
+            image_files.append(file_path)
     return image_files
 
 
