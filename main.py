@@ -200,22 +200,23 @@ def initialize_elo_system(filenames, initial_elo=1000):
     return elo_dict
 
 
-def generate_unique_id(folderPath, value, extension):
+def generate_unique_id(folderPath, value, extension, latestId):
     value_str = str(int(value))
-    id_counter = 0
+    id_counter = latestId+1
     while True:
         new_filename = f"{value_str}_ID{id_counter}.{extension}"
         new_filepath = os.path.join(folderPath, new_filename)
         if not os.path.exists(new_filepath):
-            return new_filename
+            return id_counter, new_filename
         id_counter += 1
 
 
 def rename_files_and_update_dict(folderPath, file_dict):
     updated_dict = {}
+    latestid = 0
     for filename, value in file_dict.items():
         _, extension = os.path.splitext(filename)
-        new_filename = generate_unique_id(folderPath, value, extension[1:])
+        latestid, new_filename = generate_unique_id(folderPath, value, extension[1:], latestid)
         old_filepath = os.path.join(folderPath, filename)
         new_filepath = os.path.join(folderPath, new_filename)
 
