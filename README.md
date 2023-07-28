@@ -10,14 +10,34 @@ ImageElo is a powerful Python script designed to assist you in organizing your i
 
 Using ImageElo is straightforward. Follow these steps:
 
-1. Place the Python script (or exe file) in the same folder as your image collection.
-2. Open a terminal or command prompt and navigate to the directory where the script and images are located.
-3. Run the script by either executing it without any arguments (in the same folder as the images) or by specifying the image folder as an attribute.
+1. **Setup**:
+   - Place the Python script (or exe file) in the same folder as your image collection.
 
-Feel free to manage your image files between sessions, but make sure not to delete the "gameElo.txt" file. Doing so will reset your progress, and all files will be renamed once the script is run again without that file.
+2. **Navigation**:
+   - Open a terminal or command prompt.
+   - Navigate to the directory where the script and images are located.
 
-The game's progress, represented by Elo values for each image, is stored in the "gameElo.txt" dictionary. The actual file names of the images are used solely for visual sorting purposes. If you decide to rename a file, it will not affect its Elo value. Instead, the image will be treated as unknown with an Elo of 1000 on the next run. If you want to add more images from another session or a different folder, you'll need to manually modify the values in "gameElo.txt" to merge them. Otherwise, new files will be considered fresh with an initial Elo of 1000.
+3. **Running the Script**:
+   - Execute the script by either:
+     - Running it without any arguments (if the script is in the same folder as the images).
+     - Specifying the image folder as an attribute (if the script is located elsewhere).
+
+4. **Managing Image Files**:
+   - You have the flexibility to add or delete image files between different sessions.
+
+5. **Important Note**:
+   - Avoid deleting the "gameElo.txt" file, as doing so will reset your progress.
+   - When the script is run again without "gameElo.txt," all files will be renamed.
+
+6. **Understanding Game Progress**:
+   - The game's progress is determined by Elo values assigned to each image, stored in the "gameElo.txt" dictionary.
+   - The file names of the images are purely for visual sorting purposes and have no impact on Elo values.
+   - Renaming a file will not affect its Elo value; instead, it will be treated as an unknown image with an initial Elo of 1000 on the next run.
+
+7. **Adding More Images**:
+   - If you wish to include additional images from another session or a different folder, manually modify the values in "gameElo.txt" to merge them.
+   - Otherwise, new files will be considered fresh with an initial Elo of 1000.
 
 Before applying ImageElo to your actual image collection, we strongly advise testing it on a small set of dummy files to ensure everything works as expected.
 
-We warmly welcome contributions and issue reports to enhance the functionality and stability of ImageElo. Whether you have encountered problems or have suggestions for improvements, don't hesitate to create a pull request or open an issue. Happy image organizing! 📸
+Remember that we welcome contributions and issue reports to enhance the functionality and stability of ImageElo. Whether you encounter problems or have suggestions for improvements, feel free to create a pull request or open an issue. Happy image organizing! 📸
