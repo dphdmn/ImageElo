@@ -161,15 +161,6 @@ def load_dict_from_file(filename):
 
 
 def simulate_battle(elo_dict, folder):
-    """
-    Simulates a battle between two random filenames with close Elo values and updates their Elo ratings.
-
-    Parameters:
-        elo_dict (dict): A dictionary containing filenames as keys and their corresponding Elo ratings as values.
-
-    Returns:
-        dict: The updated dictionary with Elo ratings after the simulated battle.
-    """
     # Sort the filenames based on their Elo values
     sorted_filenames = sorted(elo_dict.keys(), key=lambda x: elo_dict[x])
 
@@ -202,16 +193,6 @@ def simulate_battle(elo_dict, folder):
 
 
 def initialize_elo_system(filenames, initial_elo=1000):
-    """
-    Initializes the Elo system for a list of filenames.
-
-    Parameters:
-        filenames (list): A list of filenames to be ranked.
-        initial_elo (int, optional): The initial Elo rating for all filenames. Default is 1000.
-
-    Returns:
-        dict: A dictionary containing filenames as keys and their corresponding Elo ratings as values.
-    """
     elo_dict = {filename: initial_elo for filename in filenames}
     return elo_dict
 
@@ -255,6 +236,7 @@ def doGame(folder, elo_dict, eloFile):
 def loadGame(folder):
     eloFile = os.path.join(folder, "gameElo.txt")
     elo_dict = load_dict_from_file(eloFile)
+    elo_dict = updateFiles(folder, elo_dict)
     doGame(folder, elo_dict, eloFile)
 
 
@@ -267,6 +249,23 @@ def startGame(folder, gamefile):
     elo_dict = initialize_elo_system(filenames)
     doGame(folder, elo_dict, eloFile)
 
+def create_elo_dict_better(elo_dict, image_files_names):
+    elo_dict_better = {}
+
+    for filename in image_files_names:
+        if filename in elo_dict:
+            elo_dict_better[filename] = elo_dict[filename]
+        else:
+            elo_dict_better[filename] = 1000
+
+    return elo_dict_better
+
+def updateFiles(folder, elo_dict):
+    image_files = find_image_files(folder)
+    image_files_names = []
+    for image_path in image_files:
+        image_files_names.append(os.path.basename(image_path))
+    return create_elo_dict_better(elo_dict, image_files_names)
 
 def writeInFile(filepath, folder_name):
     image_files = find_image_files(folder_name)
