@@ -237,6 +237,10 @@ def loadGame(folder):
     eloFile = os.path.join(folder, "gameElo.txt")
     elo_dict = load_dict_from_file(eloFile)
     elo_dict = updateFiles(folder, elo_dict)
+    if len(elo_dict) < 2:
+        print("You need at least 2 photos to play the game")
+        return
+    print("Updated game files. Starting the game.")
     doGame(folder, elo_dict, eloFile)
 
 
@@ -246,6 +250,7 @@ def startGame(folder, gamefile):
     with open(gamefile, 'r') as file:
         for line in file:
             filenames.append(line.strip())
+    os.remove(gamefile)
     elo_dict = initialize_elo_system(filenames)
     doGame(folder, elo_dict, eloFile)
 
@@ -285,14 +290,15 @@ def initNewGame(folder_path, gamefile_path):
 
 def create_file_if_not_exists(folder_path):
     file_path = os.path.join(folder_path, "game.txt")
-    if not os.path.exists(file_path):
-        print(f"File '{file_path}' created successfully.")
+    game_verify_path = os.path.join(folder_path, "gameElo.txt")
+    if not os.path.exists(game_verify_path):
+        print("Game files not found. Making new game.")
         initNewGame(folder_path, file_path)
         startGame(folder_path, file_path)
     else:
+        print("Loading game.")
         loadGame(folder_path)
-        print(f"File '{file_path}' already exists.")
-        # TODO - analyze game file and add new images
+
 
 def is_image_file(filename):
     # Check if the file has an image extension (you can add more extensions if needed)
