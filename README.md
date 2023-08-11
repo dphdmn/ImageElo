@@ -14,6 +14,7 @@ ImageElo is an interactive Python script that helps you sort and organize your i
 2. **Run the Script**:
    - Open a terminal or command prompt.
    - Navigate to the folder where the script and images are located.
+   - Easy way I personally like to run the script - having ImageElo.exe in one of my PATH folders, and then simply typing "ImageElo" into adress bar of the image folder.
 
 3. **Execute the Script**:
    - Run the script without any arguments if it's in the same folder as your images.
